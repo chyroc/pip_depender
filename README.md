@@ -22,7 +22,15 @@ pip-depender <package_name>
 ```bash
 pip-depender httpx
 
+Fetching package info...  [██████████░░░░░░░░░░░░░░░░░░░░░░░░░░]   30%
+📦 Package Info:
+  • Name: httpx
+  • Description: The next generation HTTP client.
+  • Total Versions: 72
 
+Analyzing version compatibility...  [████████████████████████████████████]  100%
+
+🎯 Recommended Version(s):
 httpx = [
     { version = "^0.28.1", python = ">=3.8" },
     { version = "^0.24.1", python = ">=3.7" },
