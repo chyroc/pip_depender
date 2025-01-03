@@ -6,8 +6,13 @@ authors = ["chyroc <chyroc@qq.com>"]
 readme = "README.md"
 
 [tool.poetry.dependencies]
-python = "^3.11"
+python = ">=3.9,<4.0"
+httpx = "^0.25.0"
+packaging = "^23.2"
+click = "^8.1.7"
 
+[tool.poetry.scripts]
+pip-depender = "pip_depender.cli:main"
 
 [build-system]
 requires = ["poetry-core"]
