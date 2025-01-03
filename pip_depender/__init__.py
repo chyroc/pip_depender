@@ -24,7 +24,7 @@ class DependencyFinder:
         self.client = httpx.Client()
 
     def get_package_info(self, package_name: str) -> Tuple[List[str], Dict]:
-        """获取包的所有版本和最新版本的信息"""
+        """Get all versions and latest version info of a package"""
         url = f"https://pypi.org/pypi/{package_name}/json"
         response = self.client.get(url)
         response.raise_for_status()
@@ -32,7 +32,7 @@ class DependencyFinder:
         return list(data["releases"].keys()), data["info"]
 
     def get_version_info(self, package_name: str, version: str) -> Dict:
-        """获取特定版本的信息"""
+        """Get information for a specific version"""
         url = f"https://pypi.org/pypi/{package_name}/{version}/json"
         response = self.client.get(url)
         response.raise_for_status()
@@ -42,40 +42,39 @@ class DependencyFinder:
         self, package_name: str, python_version: str = ">=3.11"
     ) -> Union[str, List[Dict[str, str]]]:
         """
-        找到适合指定 Python 版本的包版本
+        Find suitable versions for the specified Python version requirement
         
         Args:
-            package_name: 包名
-            python_version: Python 版本要求，例如 ">=3.11"
+            package_name: Package name
+            python_version: Python version requirement, e.g. ">=3.11"
             
         Returns:
-            如果只有一个版本，返回版本字符串
-            如果有多个版本，返回版本列表
+            A single version string or a list of version dictionaries
         """
         versions, info = self.get_package_info(package_name)
-        # 按版本号排序
+        # Sort versions
         sorted_versions = sorted([parse(v) for v in versions if not parse(v).is_prerelease])
         
         if not sorted_versions:
             raise ValueError(f"No suitable versions found for {package_name}")
 
-        # 按 Python 版本要求分组
+        # Group by Python version requirements
         python_version_groups = defaultdict(list)
         for version in sorted_versions:
             version_info = self.get_version_info(package_name, str(version))
             requires_python = version_info["info"].get("requires_python", "")
             if not requires_python:
-                requires_python = ">= 2.7"  # 默认 Python 版本要求
+                requires_python = ">= 2.7"  # Default Python version requirement
             python_version_groups[requires_python].append(version)
 
-        # 如果只有一个 Python 版本要求组
+        # If only one Python version requirement group
         if len(python_version_groups) == 1:
             latest_version = sorted_versions[-1]
             version_str = f"^{latest_version.major}.{latest_version.minor}.{latest_version.micro}"
             requires_python = next(iter(python_version_groups.keys()))
             return DependencyVersion(version_str, requires_python).to_dict()
 
-        # 多个 Python 版本要求组
+        # Multiple Python version requirement groups
         result = []
         for requires_python, versions in python_version_groups.items():
             if not versions:
@@ -85,12 +84,12 @@ class DependencyFinder:
             result.append(DependencyVersion(version_str, requires_python))
 
         if len(result) > 1:
-            # 按 Python 版本要求排序，让更新的版本在前面
+            # Sort by Python version requirement, newer versions first
             result.sort(key=lambda x: parse(x.python_version.replace(">=", "").replace("<=", "").strip()), reverse=True)
             return [v.to_dict() for v in result]
 
         return result[0].to_dict()
 
     def close(self):
-        """关闭 HTTP 客户端"""
+        """Close the HTTP client"""
         self.client.close() 
