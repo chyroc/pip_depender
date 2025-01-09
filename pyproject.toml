@@ -14,6 +14,21 @@ click = "^8.1.7"
 [tool.poetry.scripts]
 pip-depender = "pip_depender.cli:main"
 
+[tool.poetry.group.dev.dependencies]
+ruff = "^0.6.0"
+pre-commit = [
+    { version = "^4.0.1", python = ">=3.9" },
+    { version = "^3.5.0", python = ">=3.8,<3.9" }
+]
+mypy = "^1.14.1"
+
+[tool.ruff]
+line-length = 120
+
+[tool.ruff.lint]
+select = ["E", "F", "I"]
+ignore = ["E501"]
+
 [build-system]
 requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"

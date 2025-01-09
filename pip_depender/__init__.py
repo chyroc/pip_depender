@@ -2,7 +2,6 @@
 pip_depender - A tool to find the most suitable package versions for your Python project
 """
 
-import json
 from typing import Dict, List, Optional, Union, Tuple, Set
 import httpx
 from packaging.version import Version, parse
