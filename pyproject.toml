@@ -1,6 +1,7 @@
 [tool.poetry]
 name = "pip-depender"
-version = "0.1.1"
+version = "0.2.0"
+license = "MIT"
 description = "Depender: Streamline your Python project dependencies with intelligent version management"
 authors = ["chyroc <chyroc@qq.com>"]
 readme = "README.md"
