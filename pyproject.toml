@@ -6,7 +6,7 @@ authors = ["chyroc <chyroc@qq.com>"]
 readme = "README.md"
 
 [tool.poetry.dependencies]
-python = ">=3.9,<4.0"
+python = ">=3.8,<4.0"
 httpx = "^0.25.0"
 packaging = "^23.2"
 click = "^8.1.7"
